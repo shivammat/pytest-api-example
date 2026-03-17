@@ -18,3 +18,31 @@ pet = {
         },
     }
 }
+
+order = {
+    "type": "object",
+    "required": ["id", "pet_id"],
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "pet_id": {
+            "type": "integer"
+        },
+        "status": {
+            "type": "string",
+            "enum": ["available", "sold", "pending"]
+        }
+    }
+}
+
+order_update = {
+    "type": "object",
+    "required": ["status"],
+    "properties": {
+        "status": {
+            "type": "string",
+            "enum": ["available", "sold", "pending"]
+        }
+    }
+}
