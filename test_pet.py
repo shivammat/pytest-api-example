@@ -26,7 +26,7 @@ TODO: Finish this test by...
 3) Validate the 'status' property in the response is equal to the expected status
 4) Validate the schema for each object in the response
 '''
-@pytest.mark.parametrize("status", [("available")])
+@pytest.mark.parametrize("status", ["available", "sold", "pending"])
 def test_find_by_status_200(status):
     test_endpoint = "/pets/findByStatus"
     params = {
@@ -34,7 +34,17 @@ def test_find_by_status_200(status):
     }
 
     response = api_helpers.get_api_data(test_endpoint, params)
-    # TODO...
+
+    assert response.status_code == 200
+
+    # Store response data based on status parameter
+    pets = response.json()
+
+    # Validate the 'status' property equals the expected status for each pet
+    for pet in pets:
+        assert pet['status'] == status
+        # Validate the response schema against the defined schema in schemas.py
+        validate(instance=pet, schema=schemas.pet)
 
 '''
 TODO: Finish this test by...
@@ -42,5 +52,10 @@ TODO: Finish this test by...
 2) Parameterizing the test for any edge cases
 '''
 def test_get_by_id_404():
-    # TODO...
-    pass
+    # Request pet id 404 (explicit 404) and expect a 404 Not Found
+    test_endpoint = "/pets/404"
+
+    response = api_helpers.get_api_data(test_endpoint)
+
+    assert response.status_code == 404
+    assert_that(response.text, contains_string("not found"))
